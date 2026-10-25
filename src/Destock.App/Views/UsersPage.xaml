@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Destock.App.Views.UsersPage"
+             x:Name="UsersRoot"
+             Title="Utilisateurs">
+
+    <Grid RowDefinitions="Auto,*">
+        <VerticalStackLayout Padding="18,12,18,10" Spacing="12">
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Comptes &amp; accès" Style="{StaticResource PageTitle}" />
+                    <Label Text="{Binding CountLabel}" Style="{StaticResource PageSubtitle}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="+ Ajouter" Style="{StaticResource SmallButton}"
+                        Command="{Binding AddUserCommand}" VerticalOptions="Center" />
+            </Grid>
+
+            <Border IsVisible="{Binding HasError}" BackgroundColor="{StaticResource DangerBg}"
+                    StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,10">
+                <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                       FontFamily="InterMedium" FontSize="12.5" />
+            </Border>
+        </VerticalStackLayout>
+
+        <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshCommand}">
+            <CollectionView ItemsSource="{Binding Users}"
+                            SelectionMode="None"
+                            Margin="18,4,18,24"
+                            ItemSizingStrategy="MeasureAllItems">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="30,60" Spacing="8" HorizontalOptions="Center">
+                        <Label Text="Aucun utilisateur" Style="{StaticResource EmptyTitle}" />
+                        <Label Text="Ajoutez un compte pour un membre de l'équipe."
+                               Style="{StaticResource EmptyText}" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource ListCard}" Margin="0,0,0,10">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding BindingContext.EditUserCommand, Source={x:Reference UsersRoot}}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+
+                                <Border WidthRequest="46" HeightRequest="46" StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 15" BackgroundColor="{StaticResource Secondary}"
+                                        VerticalOptions="Center">
+                                    <Label Text="{Binding DisplayName, Converter={StaticResource Initials}}"
+                                           FontFamily="InterBold" FontSize="14"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding DisplayName}" Style="{StaticResource CardTitle}"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Username, StringFormat='@{0}'}"
+                                           Style="{StaticResource CaptionText}" />
+                                    <Label Text="{Binding LastLoginLabel}" Style="{StaticResource CaptionText}"
+                                           LineBreakMode="TailTruncation" />
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="2" Spacing="5" HorizontalOptions="End"
+                                                     VerticalOptions="Center">
+                                    <Border Style="{StaticResource BadgeBorder}"
+                                            BackgroundColor="{StaticResource MutedSurfaceLight}"
+                                            HorizontalOptions="End">
+                                        <Label Text="{Binding FriendlyRole}" FontFamily="InterSemiBold"
+                                               FontSize="9.5" TextColor="{StaticResource Primary}" />
+                                    </Border>
+                                    <Border Style="{StaticResource BadgeBorder}"
+                                            BackgroundColor="{StaticResource Secondary}"
+                                            HorizontalOptions="End">
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border" Binding="{Binding IsActive}" Value="False">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource DangerBg}" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <Label Text="{Binding StatusLabel}" FontFamily="InterSemiBold"
+                                               FontSize="9.5" TextColor="{StaticResource Success}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsActive}" Value="False">
+                                                    <Setter Property="TextColor" Value="{StaticResource Danger}" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Destock.App.Controls"
+             x:Class="Destock.App.Views.WarehouseEditPage"
+             Title="Dépôt">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView>
+            <VerticalStackLayout Padding="18,12,18,24" Spacing="16">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="{Binding PageHeader}" Style="{StaticResource PageTitle}" />
+                    <Label Text="Un dépôt représente un lieu physique de stockage."
+                           Style="{StaticResource PageSubtitle}" />
+                </VerticalStackLayout>
+
+                <Border IsVisible="{Binding HasError}" BackgroundColor="{StaticResource DangerBg}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,10">
+                    <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                           FontFamily="InterMedium" FontSize="12.5" />
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Informations" Style="{StaticResource SectionTitle}" />
+
+                        <controls:FormEntry FieldLabel="Nom du dépôt *" Text="{Binding Name}"
+                                            Placeholder="Ex. Dépôt principal" MaxLength="80" />
+
+                        <controls:FormEntry FieldLabel="Code" Text="{Binding Code}"
+                                            Placeholder="DEP-01 (généré si vide)" MaxLength="20" />
+
+                        <controls:FormEntry FieldLabel="Adresse" Text="{Binding Address}"
+                                            Placeholder="Quartier, ville…" MaxLength="160" />
+
+                        <controls:FormEntry FieldLabel="Téléphone" Text="{Binding Phone}"
+                                            Placeholder="+225 07 00 00 00 00" Keyboard="Telephone" MaxLength="30" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                <Label Text="Dépôt par défaut" Style="{StaticResource CardTitle}" />
+                                <Label Text="Utilisé pour les nouveaux mouvements et les alertes."
+                                       Style="{StaticResource CaptionText}" />
+                            </VerticalStackLayout>
+                            <Switch Grid.Column="1" IsToggled="{Binding IsDefault}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Border Grid.Row="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLight}, Dark={StaticResource CardBackgroundDark}}"
+                StrokeThickness="0" StrokeShape="Rectangle" Padding="18,12,18,20">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <Button Text="Supprimer" Style="{StaticResource DangerButton}"
+                        IsVisible="{Binding IsNew, Converter={StaticResource InverseBool}}"
+                        Command="{Binding DeleteCommand}" />
+                <Button Grid.Column="1" Text="{Binding SaveLabel}" Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBool}}" />
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

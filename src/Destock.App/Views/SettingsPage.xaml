@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Destock.App.Views.SettingsPage"
+             Title="Paramètres">
+
+    <Grid RowDefinitions="*,Auto">
+        <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+            <ScrollView>
+                <VerticalStackLayout Padding="18,12,18,28" Spacing="16">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Paramètres" Style="{StaticResource PageTitle}" />
+                        <Label Text="Personnalisez Destock pour votre activité."
+                               Style="{StaticResource PageSubtitle}" />
+                    </VerticalStackLayout>
+
+                    <Border IsVisible="{Binding HasError}" BackgroundColor="{StaticResource DangerBg}"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,10">
+                        <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                               FontFamily="InterMedium" FontSize="12.5" />
+                    </Border>
+
+                    <!-- Profil -->
+                    <Border StrokeThickness="0" StrokeShape="RoundRectangle 22" Padding="18">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#064E3B" Offset="0.0" />
+                                <GradientStop Color="#0B7A5C" Offset="0.58" />
+                                <GradientStop Color="#0EA5A0" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                            <Border WidthRequest="54" HeightRequest="54" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 18" BackgroundColor="#26FFFFFF"
+                                    VerticalOptions="Center">
+                                <Label Text="{Binding UserInitials}" FontFamily="InterBold" FontSize="18"
+                                       TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label Text="{Binding UserDisplayName}" FontFamily="InterBold" FontSize="18"
+                                       TextColor="White" />
+                                <Label Text="{Binding UserRole}" FontFamily="Inter" FontSize="11.5"
+                                       TextColor="#CCFFFFFF" />
+                                <Label Text="{Binding UserName}" FontFamily="Inter" FontSize="11"
+                                       TextColor="#99FFFFFF" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Entreprise -->
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Entreprise" Style="{StaticResource SectionTitle}" />
+                            <Border Style="{StaticResource InputBorder}" Padding="12,0">
+                                <Entry Text="{Binding CompanyName}" Placeholder="Nom de votre entreprise"
+                                       FontSize="14" />
+                            </Border>
+                            <Label Text="Ce nom apparaît dans le menu et sur les rapports."
+                                   Style="{StaticResource CaptionText}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Préférences -->
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="14">
+                            <Label Text="Préférences" Style="{StaticResource SectionTitle}" />
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Devise" Style="{StaticResource FieldLabel}" />
+                                <Border Style="{StaticResource InputBorder}" Padding="10,0">
+                                    <Picker ItemsSource="{Binding CurrencyOptions}"
+                                            ItemDisplayBinding="{Binding Label}"
+                                            SelectedItem="{Binding SelectedCurrency}"
+                                            Title="Choisir la devise" FontSize="14" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Thème" Style="{StaticResource FieldLabel}" />
+                                <Border Style="{StaticResource InputBorder}" Padding="10,0">
+                                    <Picker ItemsSource="{Binding ThemeOptions}"
+                                            ItemDisplayBinding="{Binding Label}"
+                                            SelectedItem="{Binding SelectedTheme}"
+                                            Title="Choisir le thème" FontSize="14" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Dépôt par défaut" Style="{StaticResource FieldLabel}" />
+                                <Border Style="{StaticResource InputBorder}" Padding="10,0">
+                                    <Picker ItemsSource="{Binding WarehouseOptions}"
+                                            ItemDisplayBinding="{Binding Name}"
+                                            SelectedItem="{Binding SelectedWarehouse}"
+                                            Title="Choisir un dépôt" FontSize="14" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <BoxView Style="{StaticResource Divider}" />
+
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                    <Label Text="Retour sonore du scanner" Style="{StaticResource CardTitle}" />
+                                    <Label Text="Bip à chaque code détecté." Style="{StaticResource CaptionText}" />
+                                </VerticalStackLayout>
+                                <Switch Grid.Column="1" IsToggled="{Binding BarcodeSound}" />
+                            </Grid>
+
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                    <Label Text="Vibration du scanner" Style="{StaticResource CardTitle}" />
+                                    <Label Text="Retour haptique à chaque code détecté." Style="{StaticResource CaptionText}" />
+                                </VerticalStackLayout>
+                                <Switch Grid.Column="1" IsToggled="{Binding BarcodeVibrate}" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Compte -->
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Compte" Style="{StaticResource SectionTitle}" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                    <Label Text="Mot de passe" Style="{StaticResource CardTitle}" />
+                                    <Label Text="Modifiez le mot de passe de votre compte."
+                                           Style="{StaticResource CaptionText}" />
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="Modifier" Style="{StaticResource SecondaryButton}"
+                                        FontSize="12.5" Padding="14,8" MinimumHeightRequest="40"
+                                        Command="{Binding ChangePasswordCommand}" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Catalogue -->
+                    <Border Style="{StaticResource Card}">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                <Label Text="Catégories de produits" Style="{StaticResource CardTitle}" />
+                                <Label Text="Organisez votre catalogue et ses couleurs."
+                                       Style="{StaticResource CaptionText}" />
+                            </VerticalStackLayout>
+                            <Button Grid.Column="1" Text="Gérer" Style="{StaticResource GhostButton}"
+                                    Command="{Binding OpenCategoriesCommand}" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Démonstration -->
+                    <Border Style="{StaticResource Card}" IsVisible="{Binding IsAdmin}">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                <Label Text="Données de démonstration" Style="{StaticResource CardTitle}" />
+                                <Label Text="Ajouter un catalogue et un historique d'exemple."
+                                       Style="{StaticResource CaptionText}" />
+                            </VerticalStackLayout>
+                            <Button Grid.Column="1" Text="Ajouter" Style="{StaticResource OutlineButton}"
+                                    FontSize="12.5" Padding="14,8" MinimumHeightRequest="40"
+                                    Command="{Binding SeedDemoCommand}" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Application -->
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Application" Style="{StaticResource SectionTitle}" />
+                            <Label Text="{Binding EngineVersion}" Style="{StaticResource BodyText}" />
+                            <Label Text="{Binding InfoLabel}" Style="{StaticResource CaptionText}" />
+                            <BoxView Style="{StaticResource Divider}" />
+                            <Label Text="Base de données locale" Style="{StaticResource FieldLabel}" />
+                            <Label Text="{Binding DatabasePath}" Style="{StaticResource CaptionText}"
+                                   LineBreakMode="CharacterWrap" />
+                            <Label Text="Toutes vos données restent sur cet appareil. Aucune connexion internet n'est nécessaire."
+                                   Style="{StaticResource CaptionText}" Margin="0,4,0,0" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+
+        <Border Grid.Row="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLight}, Dark={StaticResource CardBackgroundDark}}"
+                StrokeThickness="0" StrokeShape="Rectangle" Padding="18,12,18,20">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <Button Text="Enregistrer les préférences" Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBool}}" />
+                <ActivityIndicator Grid.Column="1" IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}" VerticalOptions="Center" />
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

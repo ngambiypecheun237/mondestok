@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Destock.App.Controls"
+             x:Class="Destock.App.Views.NewMovementPage"
+             x:Name="NewMovementRoot"
+             Title="Mouvement">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView>
+            <VerticalStackLayout Padding="18,12,18,24" Spacing="16">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="{Binding PageHeader}" Style="{StaticResource PageTitle}" />
+                    <Label Text="Enregistrez une entrée, une sortie ou un ajustement d'inventaire."
+                           Style="{StaticResource PageSubtitle}" />
+                </VerticalStackLayout>
+
+                <Border IsVisible="{Binding HasError}" BackgroundColor="{StaticResource DangerBg}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,10">
+                    <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                           FontFamily="InterMedium" FontSize="12.5" />
+                </Border>
+
+                <!-- Type de mouvement -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Type de mouvement" Style="{StaticResource SectionTitle}" />
+                        <Border Style="{StaticResource InputBorder}" Padding="10,0">
+                            <Picker ItemsSource="{Binding TypeOptions}"
+                                    ItemDisplayBinding="{Binding Label}"
+                                    SelectedItem="{Binding SelectedTypeOption}"
+                                    Title="Choisir le type" FontSize="14" />
+                        </Border>
+                        <Label Text="{Binding TypeHint}" Style="{StaticResource CaptionText}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Sélection du produit -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Produit" Style="{StaticResource SectionTitle}" />
+                            <Label Grid.Column="1" Text="Étape 1" Style="{StaticResource CaptionText}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+
+                        <VerticalStackLayout Spacing="10"
+                                             IsVisible="{Binding HasProduct, Converter={StaticResource InverseBool}}">
+                            <Border Style="{StaticResource InputBorder}" Padding="12,2,4,2">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="6">
+                                    <Image Source="search.png" HeightRequest="17" WidthRequest="17"
+                                           VerticalOptions="Center" />
+                                    <Entry Grid.Column="1" Text="{Binding ProductSearch}"
+                                           Placeholder="Nom, référence ou code-barres…"
+                                           ClearButtonVisibility="WhileEditing" FontSize="13.5" />
+                                    <ImageButton Grid.Column="2" Source="scan.png"
+                                                 Style="{StaticResource IconButton}"
+                                                 HeightRequest="40" WidthRequest="40"
+                                                 Command="{Binding ScanCommand}" />
+                                </Grid>
+                            </Border>
+
+                            <ActivityIndicator IsRunning="{Binding IsSearching}"
+                                               IsVisible="{Binding IsSearching}" HeightRequest="24" />
+
+                            <Label Text="Tapez au moins quelques caractères pour rechercher un produit."
+                                   Style="{StaticResource CaptionText}"
+                                   IsVisible="{Binding ShowSearchHint}" />
+
+                            <VerticalStackLayout Spacing="2" IsVisible="{Binding HasSearchResults}"
+                                                 BindableLayout.ItemsSource="{Binding SearchResults}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="8,9" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding BindingContext.SelectProductCommand, Source={x:Reference NewMovementRoot}}"
+                                                    CommandParameter="{Binding .}" />
+                                            </Grid.GestureRecognizers>
+                                            <Border WidthRequest="34" HeightRequest="34" StrokeThickness="0"
+                                                    StrokeShape="RoundRectangle 11"
+                                                    BackgroundColor="{Binding CategoryColor, Converter={StaticResource CategoryColor}}">
+                                                <Label Text="{Binding Name, Converter={StaticResource FirstLetter}}"
+                                                       FontFamily="InterBold" FontSize="13" TextColor="White"
+                                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                                            </Border>
+                                            <VerticalStackLayout Grid.Column="1" Spacing="1"
+                                                                 VerticalOptions="Center">
+                                                <Label Text="{Binding Name}" Style="{StaticResource CardTitle}"
+                                                       LineBreakMode="TailTruncation" />
+                                                <Label Text="{Binding SearchSubtitle}"
+                                                       Style="{StaticResource CaptionText}" />
+                                            </VerticalStackLayout>
+                                            <Label Grid.Column="2" Text="{Binding StockLabel}"
+                                                   Style="{StaticResource CaptionText}"
+                                                   VerticalOptions="Center" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+
+                            <Label Text="Aucun produit trouvé. Vérifiez l'orthographe ou créez la fiche depuis l'onglet Produits."
+                                   Style="{StaticResource EmptyText}"
+                                   IsVisible="{Binding ShowNoResult}" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="10" IsVisible="{Binding HasProduct}">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border WidthRequest="48" HeightRequest="48" StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 15"
+                                        BackgroundColor="{Binding SelectedProduct.CategoryColor, Converter={StaticResource CategoryColor}}">
+                                    <Label Text="{Binding SelectedProduct.Name, Converter={StaticResource FirstLetter}}"
+                                           FontFamily="InterBold" FontSize="17" TextColor="White"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding SelectedProduct.Name}"
+                                           Style="{StaticResource CardTitle}" FontSize="16"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding SelectedProduct.SearchSubtitle}"
+                                           Style="{StaticResource CaptionText}" />
+                                </VerticalStackLayout>
+                                <Button Grid.Column="2" Text="Changer" Style="{StaticResource GhostButton}"
+                                        Command="{Binding ClearProductCommand}" VerticalOptions="Center" />
+                            </Grid>
+
+                            <Border BackgroundColor="{StaticResource Secondary}" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12" Padding="12,9">
+                                <Label Text="{Binding StockHint}" FontFamily="InterMedium" FontSize="12"
+                                       TextColor="{StaticResource Primary}" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Détails du mouvement -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="14">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Détails" Style="{StaticResource SectionTitle}" />
+                            <Label Grid.Column="1" Text="Étape 2" Style="{StaticResource CaptionText}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <controls:FormEntry FieldLabel="{Binding QuantityLabel}"
+                                                Text="{Binding QuantityText}"
+                                                Placeholder="0" Keyboard="Numeric" />
+                            <controls:FormEntry Grid.Column="1" FieldLabel="{Binding PriceLabel}"
+                                                Text="{Binding UnitPriceText}"
+                                                Placeholder="0" Keyboard="Numeric" />
+                        </Grid>
+                        <Label Text="{Binding CurrencyHint}" Style="{StaticResource CaptionText}"
+                               Margin="0,-8,0,0" />
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Dépôt" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource InputBorder}" Padding="10,0">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                                    <Image Source="warehouses.png" HeightRequest="17" WidthRequest="17"
+                                           VerticalOptions="Center" />
+                                    <Picker Grid.Column="1"
+                                            ItemsSource="{Binding WarehouseOptions}"
+                                            ItemDisplayBinding="{Binding Name}"
+                                            SelectedItem="{Binding SelectedWarehouse}"
+                                            Title="Choisir un dépôt" FontSize="14" />
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <controls:FormEntry FieldLabel="Document / référence"
+                                            Text="{Binding Reference}"
+                                            Placeholder="Ex. BL-2026-042, facture…" MaxLength="80" />
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Note" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource InputBorder}" Padding="10,6">
+                                <Editor Text="{Binding Note}"
+                                        Placeholder="Commentaire facultatif…"
+                                        AutoSize="TextChanges" HeightRequest="80" FontSize="14" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Border Grid.Row="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLight}, Dark={StaticResource CardBackgroundDark}}"
+                StrokeThickness="0" StrokeShape="Rectangle" Padding="18,12,18,20">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <Button Text="{Binding SaveLabel}" Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBool}}" />
+                <ActivityIndicator Grid.Column="1" IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}" VerticalOptions="Center" />
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

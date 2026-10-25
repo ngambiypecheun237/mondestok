@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Destock.App.Views.ReportsPage"
+             Title="Rapports">
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+        <ScrollView>
+            <VerticalStackLayout Padding="18,12,18,32" Spacing="16">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Rapports &amp; exports" Style="{StaticResource PageTitle}" />
+                    <Label Text="{Binding CompanyName}" Style="{StaticResource PageSubtitle}" />
+                </VerticalStackLayout>
+
+                <Border IsVisible="{Binding HasError}" BackgroundColor="{StaticResource DangerBg}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,10">
+                    <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                           FontFamily="InterMedium" FontSize="12.5" />
+                </Border>
+
+                <!-- Filtres -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Période &amp; dépôt" Style="{StaticResource SectionTitle}" />
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="Du" Style="{StaticResource FieldLabel}" />
+                                <Border Style="{StaticResource InputBorder}" Padding="10,0">
+                                    <DatePicker Date="{Binding FromDate}" Format="dd/MM/yyyy" />
+                                </Border>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                <Label Text="Au" Style="{StaticResource FieldLabel}" />
+                                <Border Style="{StaticResource InputBorder}" Padding="10,0">
+                                    <DatePicker Date="{Binding ToDate}" Format="dd/MM/yyyy" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Dépôt" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource InputBorder}" Padding="10,0">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                                    <Image Source="warehouses.png" HeightRequest="18" WidthRequest="18"
+                                           VerticalOptions="Center" />
+                                    <Picker Grid.Column="1"
+                                            ItemsSource="{Binding WarehouseOptions}"
+                                            ItemDisplayBinding="{Binding Name}"
+                                            SelectedItem="{Binding SelectedWarehouse}"
+                                            Title="Tous les dépôts" FontSize="14" />
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <Label Text="{Binding PeriodLabel}" Style="{StaticResource CaptionText}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Indicateurs -->
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+                    <Border Style="{StaticResource Card}" Padding="14">
+                        <VerticalStackLayout Spacing="5">
+                            <Border WidthRequest="32" HeightRequest="32" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 10" BackgroundColor="{StaticResource Secondary}">
+                                <Image Source="products.png" HeightRequest="16" WidthRequest="16"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Label Text="{Binding StockValueLabel}" Style="{StaticResource MetricValue}"
+                                   FontSize="19" LineBreakMode="TailTruncation" />
+                            <Label Text="Valeur d'achat du stock" Style="{StaticResource MetricLabel}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource Card}" Padding="14">
+                        <VerticalStackLayout Spacing="5">
+                            <Border WidthRequest="32" HeightRequest="32" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 10" BackgroundColor="{StaticResource InfoBg}">
+                                <Image Source="category.png" HeightRequest="16" WidthRequest="16"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Label Text="{Binding ProductCountLabel}" Style="{StaticResource MetricValue}"
+                                   FontSize="19" />
+                            <Label Text="Produits actifs" Style="{StaticResource MetricLabel}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Style="{StaticResource Card}" Padding="14">
+                        <VerticalStackLayout Spacing="5">
+                            <Border WidthRequest="32" HeightRequest="32" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 10" BackgroundColor="{StaticResource DangerBg}">
+                                <Image Source="alerts.png" HeightRequest="16" WidthRequest="16"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Label Text="{Binding AlertsLabel}" Style="{StaticResource MetricValue}"
+                                   FontSize="19" />
+                            <Label Text="Alertes de stock" Style="{StaticResource MetricLabel}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource Card}" Padding="14">
+                        <VerticalStackLayout Spacing="5">
+                            <Border WidthRequest="32" HeightRequest="32" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 10" BackgroundColor="{StaticResource WarningBg}">
+                                <Image Source="movements.png" HeightRequest="16" WidthRequest="16"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Label Text="{Binding TodayLabel}" Style="{StaticResource MetricValue}"
+                                   FontSize="16" />
+                            <Label Text="Activité du jour" Style="{StaticResource MetricLabel}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Exports -->
+                <Label Text="Exporter les données" Style="{StaticResource SectionTitle}" />
+
+                <Border Style="{StaticResource Card}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Border WidthRequest="44" HeightRequest="44" StrokeThickness="0"
+                                StrokeShape="RoundRectangle 14" BackgroundColor="{StaticResource Secondary}"
+                                VerticalOptions="Center">
+                            <Image Source="reports.png" HeightRequest="21" WidthRequest="21"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                            <Label Text="Inventaire du stock" Style="{StaticResource CardTitle}" />
+                            <Label Text="État actuel des quantités, seuils et valeurs par dépôt."
+                                   Style="{StaticResource CaptionText}" />
+                            <Label Text="CSV · une ligne par produit et dépôt" Style="{StaticResource CaptionText}" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="2" Text="Exporter" Style="{StaticResource SmallButton}"
+                                Command="{Binding ExportInventoryCommand}"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBool}}"
+                                VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Border WidthRequest="44" HeightRequest="44" StrokeThickness="0"
+                                StrokeShape="RoundRectangle 14" BackgroundColor="{StaticResource WarningBg}"
+                                VerticalOptions="Center">
+                            <Image Source="movements.png" HeightRequest="21" WidthRequest="21"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                            <Label Text="Journal des mouvements" Style="{StaticResource CardTitle}" />
+                            <Label Text="Entrées, sorties et ajustements sur la période sélectionnée."
+                                   Style="{StaticResource CaptionText}" />
+                            <Label Text="CSV · filtres période et dépôt appliqués" Style="{StaticResource CaptionText}" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="2" Text="Exporter" Style="{StaticResource SmallButton}"
+                                Command="{Binding ExportMovementsCommand}"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBool}}"
+                                VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <Border BackgroundColor="{AppThemeBinding Light={StaticResource MutedSurfaceLight}, Dark={StaticResource MutedSurfaceDark}}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="14,11">
+                    <HorizontalStackLayout Spacing="9">
+                        <Image Source="download.png" HeightRequest="15" WidthRequest="15"
+                               VerticalOptions="Start" Margin="0,1,0,0" />
+                        <Label Text="Les fichiers sont partagés via Android (Fichiers, Drive, e-mail…). Encodage UTF-8, séparateur point-virgule, compatible Excel."
+                               FontFamily="Inter" FontSize="11.5"
+                               TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+                    </HorizontalStackLayout>
+                </Border>
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

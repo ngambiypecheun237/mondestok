@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Destock.App.Views.AlertsPage"
+             x:Name="AlertsRoot"
+             Title="Alertes">
+
+    <Grid RowDefinitions="Auto,*">
+        <VerticalStackLayout Padding="18,12,18,10" Spacing="12">
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Stocks à surveiller" Style="{StaticResource PageTitle}" />
+                    <Label Text="{Binding CountLabel}" Style="{StaticResource PageSubtitle}" />
+                </VerticalStackLayout>
+                <ImageButton Grid.Column="1" Source="refresh.png" Style="{StaticResource IconButton}"
+                             Command="{Binding RefreshCommand}" VerticalOptions="Center" />
+            </Grid>
+
+            <Border Style="{StaticResource InputBorder}" Padding="12,0">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                    <Image Source="warehouses.png" HeightRequest="18" WidthRequest="18"
+                           VerticalOptions="Center" />
+                    <Picker Grid.Column="1"
+                            ItemsSource="{Binding WarehouseOptions}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedWarehouse}"
+                            Title="Tous les dépôts" FontSize="13.5" />
+                </Grid>
+            </Border>
+
+            <Border IsVisible="{Binding HasError}" BackgroundColor="{StaticResource DangerBg}"
+                    StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,10">
+                <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                       FontFamily="InterMedium" FontSize="12.5" />
+            </Border>
+        </VerticalStackLayout>
+
+        <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshCommand}">
+            <CollectionView ItemsSource="{Binding Alerts}"
+                            SelectionMode="None"
+                            Margin="18,4,18,24"
+                            ItemSizingStrategy="MeasureAllItems">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="30,70" Spacing="10" HorizontalOptions="Center">
+                        <Border WidthRequest="62" HeightRequest="62" BackgroundColor="{StaticResource SuccessBg}"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 20"
+                                HorizontalOptions="Center">
+                            <Image Source="check.png" HeightRequest="28" WidthRequest="28"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <Label Text="Tous les stocks sont bons" Style="{StaticResource EmptyTitle}" />
+                        <Label Text="Aucun produit n'est en dessous de son seuil d'alerte."
+                               Style="{StaticResource EmptyText}" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource ListCard}" Margin="0,0,0,10">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding BindingContext.AlertTappedCommand, Source={x:Reference AlertsRoot}}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+
+                                <Border WidthRequest="44" HeightRequest="44" StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 14" BackgroundColor="{StaticResource DangerBg}"
+                                        VerticalOptions="Center">
+                                    <Label Text="!" FontFamily="InterExtraBold" FontSize="19"
+                                           TextColor="{StaticResource Danger}"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                    <Label Text="{Binding ProductName}" Style="{StaticResource CardTitle}"
+                                           LineBreakMode="TailTruncation" />
+                                    <HorizontalStackLayout Spacing="5">
+                                        <Label Text="{Binding ProductSku}" Style="{StaticResource CaptionText}" />
+                                        <Label Text="·" Style="{StaticResource CaptionText}" />
+                                        <Label Text="{Binding WarehouseName}" Style="{StaticResource CaptionText}" />
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Spacing="6">
+                                        <Label Text="{Binding ThresholdLabel}" Style="{StaticResource CaptionText}" />
+                                        <Label Text="·" Style="{StaticResource CaptionText}" />
+                                        <Label Text="{Binding DeficitLabel}" Style="{StaticResource CaptionText}"
+                                               TextColor="{StaticResource Danger}" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="End"
+                                                     VerticalOptions="Center">
+                                    <HorizontalStackLayout Spacing="3" HorizontalOptions="End">
+                                        <Label Text="{Binding Quantity, Converter={StaticResource Quantity}}"
+                                               FontFamily="InterBold" FontSize="20"
+                                               TextColor="{StaticResource Danger}" />
+                                        <Label Text="{Binding Unit}" Style="{StaticResource CaptionText}"
+                                               VerticalOptions="End" Margin="0,0,0,3" />
+                                    </HorizontalStackLayout>
+                                    <Label Text="en stock" Style="{StaticResource CaptionText}"
+                                           HorizontalTextAlignment="End" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Destock.App.Views.ProductsPage"
+             x:Name="ProductsRoot"
+             Title="Produits">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <VerticalStackLayout Padding="18,12,18,10" Spacing="12">
+
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Catalogue" Style="{StaticResource PageTitle}" />
+                    <HorizontalStackLayout Spacing="6">
+                        <Label Text="{Binding TotalLabel}" Style="{StaticResource PageSubtitle}" />
+                        <Label Text="·" Style="{StaticResource PageSubtitle}" />
+                        <Label Text="{Binding StockValueLabel}" Style="{StaticResource PageSubtitle}" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="+ Ajouter" Style="{StaticResource SmallButton}"
+                        Command="{Binding AddProductCommand}" VerticalOptions="Center" />
+            </Grid>
+
+            <Border Style="{StaticResource InputBorder}" Padding="12,0">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="6">
+                    <Image Source="search.png" HeightRequest="18" WidthRequest="18" VerticalOptions="Center" />
+                    <Entry Grid.Column="1" Text="{Binding SearchText}"
+                           Placeholder="Rechercher un produit, SKU, code-barres…"
+                           ClearButtonVisibility="WhileEditing" FontSize="13.5" />
+                    <ImageButton Grid.Column="2" Source="scan.png" Style="{StaticResource IconButton}"
+                                 HeightRequest="40" WidthRequest="40"
+                                 Command="{Binding ScanCommand}" />
+                </Grid>
+            </Border>
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <Border Style="{StaticResource InputBorder}" Padding="10,0">
+                    <Picker ItemsSource="{Binding CategoryOptions}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedCategory}"
+                            Title="Catégorie" FontSize="13" />
+                </Border>
+                <HorizontalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                    <Label Text="Stock bas" Style="{StaticResource CaptionText}" VerticalOptions="Center" />
+                    <Switch IsToggled="{Binding LowStockOnly}" />
+                </HorizontalStackLayout>
+            </Grid>
+        </VerticalStackLayout>
+
+        <RefreshView Grid.Row="2" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+            <CollectionView ItemsSource="{Binding Products}"
+                            SelectionMode="None"
+                            Margin="18,4,18,24"
+                            ItemSizingStrategy="MeasureAllItems">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="30,60" Spacing="8" HorizontalOptions="Center">
+                        <Border WidthRequest="56" HeightRequest="56" BackgroundColor="{StaticResource Secondary}"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 18" HorizontalOptions="Center">
+                            <Image Source="products.png" HeightRequest="26" WidthRequest="26"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <Label Text="Aucun produit trouvé" Style="{StaticResource EmptyTitle}" />
+                        <Label Text="Modifiez vos filtres ou ajoutez un nouvel article."
+                               Style="{StaticResource EmptyText}" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource ListCard}" Margin="0,0,0,10">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding BindingContext.OpenProductCommand, Source={x:Reference ProductsRoot}}"
+                                        CommandParameter="{Binding Id}" />
+                                </Grid.GestureRecognizers>
+
+                                <Border WidthRequest="46" HeightRequest="46" StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 14"
+                                        BackgroundColor="{Binding CategoryColor, Converter={StaticResource CategoryColor}}"
+                                        VerticalOptions="Center">
+                                    <Label Text="{Binding Name, Converter={StaticResource FirstLetter}}"
+                                           FontFamily="InterBold" FontSize="17" TextColor="White"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding Name}" Style="{StaticResource CardTitle}"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding SearchSubtitle}" Style="{StaticResource CaptionText}" />
+                                    <HorizontalStackLayout Spacing="5">
+                                        <Border WidthRequest="6" HeightRequest="6"
+                                                BackgroundColor="{Binding CategoryColor, Converter={StaticResource CategoryColor}}"
+                                                StrokeThickness="0" StrokeShape="RoundRectangle 3"
+                                                VerticalOptions="Center" />
+                                        <Label Text="{Binding CategoryName}" Style="{StaticResource CaptionText}" />
+                                        <Label Text="·" Style="{StaticResource CaptionText}" />
+                                        <Label Text="{Binding Unit}" Style="{StaticResource CaptionText}" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+
+                                <VerticalStackLayout Grid.Column="2" Spacing="5" HorizontalOptions="End"
+                                                     VerticalOptions="Center">
+                                    <HorizontalStackLayout Spacing="3" HorizontalOptions="End">
+                                        <Label Text="{Binding TotalQuantity, Converter={StaticResource Quantity}}"
+                                               FontFamily="InterBold" FontSize="16" TextColor="{StaticResource Primary}" />
+                                        <Label Text="{Binding Unit}" Style="{StaticResource CaptionText}"
+                                               VerticalOptions="End" Margin="0,0,0,2" />
+                                    </HorizontalStackLayout>
+                                    <Border Style="{StaticResource BadgeBorder}"
+                                            BackgroundColor="{Binding ., Converter={StaticResource StockStateColor}}"
+                                            HorizontalOptions="End">
+                                        <Label Text="{Binding ., Converter={StaticResource StockState}}"
+                                               FontFamily="InterSemiBold" FontSize="10"
+                                               TextColor="{Binding ., Converter={StaticResource StockStateTextColor}}" />
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Destock.App.Controls"
+             x:Class="Destock.App.Views.LoginPage"
+             Shell.NavBarIsVisible="False"
+             Title="Connexion">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#064E3B" Offset="0.0" />
+                <GradientStop Color="#0B7A5C" Offset="0.55" />
+                <GradientStop Color="#0EA5A0" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Ellipse Fill="#14FFFFFF" WidthRequest="280" HeightRequest="280"
+                 HorizontalOptions="End" VerticalOptions="Start"
+                 TranslationX="100" TranslationY="-120" />
+        <Ellipse Fill="#0DFFFFFF" WidthRequest="340" HeightRequest="340"
+                 HorizontalOptions="Start" VerticalOptions="End"
+                 TranslationX="-120" TranslationY="140" />
+
+        <ScrollView>
+            <VerticalStackLayout Padding="24,54,24,32" Spacing="22" VerticalOptions="Center">
+
+                <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+                    <Image Source="logo_white.png" HeightRequest="42" WidthRequest="42" />
+                    <Label Text="Destock" FontFamily="InterExtraBold" FontSize="30"
+                           TextColor="White" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <Label Text="Votre stock, sous contrôle."
+                       FontFamily="InterMedium" FontSize="14" TextColor="#CCFFFFFF"
+                       HorizontalTextAlignment="Center" />
+
+                <Border Style="{StaticResource Card}" Padding="22,24" Margin="0,6,0,0">
+                    <VerticalStackLayout Spacing="16">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Connexion" Style="{StaticResource PageTitle}" />
+                            <Label Text="Accédez à votre espace de gestion."
+                                   Style="{StaticResource PageSubtitle}" />
+                        </VerticalStackLayout>
+
+                        <controls:FormEntry FieldLabel="Nom d'utilisateur"
+                                            Text="{Binding Username}"
+                                            Placeholder="Ex. admin" />
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Mot de passe" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource InputBorder}">
+                                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="2">
+                                    <Entry Grid.Column="0"
+                                           Text="{Binding Password}"
+                                           Placeholder="Votre mot de passe"
+                                           IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InverseBool}}"
+                                           ReturnType="Go"
+                                           ReturnCommand="{Binding LoginCommand}" />
+                                    <ImageButton Grid.Column="1"
+                                                 Source="eye.png"
+                                                 Style="{StaticResource IconButton}"
+                                                 HeightRequest="40" WidthRequest="40"
+                                                 Command="{Binding TogglePasswordCommand}"
+                                                 IsVisible="{Binding IsPasswordVisible, Converter={StaticResource InverseBool}}" />
+                                    <ImageButton Grid.Column="2"
+                                                 Source="eye_off.png"
+                                                 Style="{StaticResource IconButton}"
+                                                 HeightRequest="40" WidthRequest="40"
+                                                 Command="{Binding TogglePasswordCommand}"
+                                                 IsVisible="{Binding IsPasswordVisible}" />
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <Border IsVisible="{Binding HasError}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource DangerBg}, Dark=#3A1D20}"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,10">
+                            <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                                   FontFamily="InterMedium" FontSize="12.5" />
+                        </Border>
+
+                        <Button Text="Se connecter"
+                                Command="{Binding LoginCommand}"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBool}}" />
+                        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                                           HeightRequest="22" />
+
+                        <BoxView Style="{StaticResource Divider}" Margin="0,2" />
+
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Première utilisation : admin / admin123"
+                                   Style="{StaticResource MutedText}"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Pensez à modifier ce mot de passe dans les paramètres."
+                                   Style="{StaticResource CaptionText}"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <HorizontalStackLayout Spacing="7" HorizontalOptions="Center">
+                    <Image Source="key.png" HeightRequest="13" WidthRequest="13" Opacity="0.7" />
+                    <Label Text="100 % hors-ligne · données chiffrées localement"
+                           FontFamily="InterMedium" FontSize="11" TextColor="#B8FFFFFF" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid IsVisible="{Binding IsRestoring}" BackgroundColor="#F20B7A5C">
+            <VerticalStackLayout Spacing="14" HorizontalOptions="Center" VerticalOptions="Center">
+                <Image Source="logo_white.png" HeightRequest="64" WidthRequest="64" />
+                <ActivityIndicator IsRunning="True" Color="White" />
+                <Label Text="Ouverture de votre stock…" TextColor="White"
+                       FontFamily="InterMedium" FontSize="13" />
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

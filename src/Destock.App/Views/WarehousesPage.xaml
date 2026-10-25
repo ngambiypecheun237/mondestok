@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Destock.App.Views.WarehousesPage"
+             x:Name="WarehousesRoot"
+             Title="Dépôts">
+
+    <Grid RowDefinitions="Auto,*">
+        <VerticalStackLayout Padding="18,12,18,10" Spacing="12">
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Réseau de dépôts" Style="{StaticResource PageTitle}" />
+                    <Label Text="{Binding CountLabel}" Style="{StaticResource PageSubtitle}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="+ Ajouter" Style="{StaticResource SmallButton}"
+                        Command="{Binding AddWarehouseCommand}" VerticalOptions="Center" />
+            </Grid>
+
+            <Border IsVisible="{Binding HasError}" BackgroundColor="{StaticResource DangerBg}"
+                    StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,10">
+                <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                       FontFamily="InterMedium" FontSize="12.5" />
+            </Border>
+        </VerticalStackLayout>
+
+        <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshCommand}">
+            <CollectionView ItemsSource="{Binding Warehouses}"
+                            SelectionMode="None"
+                            Margin="18,4,18,24"
+                            ItemSizingStrategy="MeasureAllItems">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="30,60" Spacing="8" HorizontalOptions="Center">
+                        <Label Text="Aucun dépôt" Style="{StaticResource EmptyTitle}" />
+                        <Label Text="Ajoutez un premier dépôt pour commencer." Style="{StaticResource EmptyText}" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource ListCard}" Margin="0,0,0,10">
+                            <VerticalStackLayout Spacing="12">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <Border WidthRequest="46" HeightRequest="46" StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14" BackgroundColor="{StaticResource Secondary}">
+                                        <Image Source="warehouses.png" HeightRequest="21" WidthRequest="21"
+                                               HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <HorizontalStackLayout Spacing="7">
+                                            <Label Text="{Binding Name}" Style="{StaticResource CardTitle}" />
+                                            <Border BackgroundColor="{StaticResource Secondary}" StrokeThickness="0"
+                                                    StrokeShape="RoundRectangle 999" Padding="7,2"
+                                                    VerticalOptions="Center"
+                                                    IsVisible="{Binding IsDefault}">
+                                                <Label Text="Par défaut" FontFamily="InterSemiBold" FontSize="9.5"
+                                                       TextColor="{StaticResource Primary}" />
+                                            </Border>
+                                        </HorizontalStackLayout>
+                                        <Label Text="{Binding Code}" Style="{StaticResource CaptionText}" />
+                                        <Label Text="{Binding AddressLabel}" Style="{StaticResource CaptionText}"
+                                               LineBreakMode="TailTruncation" />
+                                    </VerticalStackLayout>
+
+                                    <VerticalStackLayout Grid.Column="2" Spacing="1" HorizontalOptions="End">
+                                        <Label Text="{Binding StockValueMinor, Converter={StaticResource MoneyShort}}"
+                                               FontFamily="InterBold" FontSize="13"
+                                               TextColor="{StaticResource Primary}" HorizontalTextAlignment="End" />
+                                        <Label Text="valeur stock" Style="{StaticResource CaptionText}"
+                                               HorizontalTextAlignment="End" />
+                                    </VerticalStackLayout>
+                                </Grid>
+
+                                <Label Text="{Binding Summary}" Style="{StaticResource CaptionText}" />
+
+                                <Grid ColumnDefinitions="Auto,Auto,Auto" ColumnSpacing="8">
+                                    <Button Text="Modifier" Style="{StaticResource GhostButton}"
+                                            Command="{Binding BindingContext.EditWarehouseCommand, Source={x:Reference WarehousesRoot}}"
+                                            CommandParameter="{Binding .}" />
+                                    <Button Grid.Column="1" Text="Définir par défaut"
+                                            Style="{StaticResource GhostButton}" FontSize="12"
+                                            IsVisible="{Binding IsDefault, Converter={StaticResource InverseBool}}"
+                                            Command="{Binding BindingContext.SetDefaultCommand, Source={x:Reference WarehousesRoot}}"
+                                            CommandParameter="{Binding .}" />
+                                    <Button Grid.Column="2" Text="Supprimer" Style="{StaticResource DangerButton}"
+                                            FontSize="12" Padding="12,6" MinimumHeightRequest="36"
+                                            Command="{Binding BindingContext.DeleteWarehouseCommand, Source={x:Reference WarehousesRoot}}"
+                                            CommandParameter="{Binding .}" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

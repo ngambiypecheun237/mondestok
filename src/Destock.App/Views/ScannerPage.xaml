@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:scanner="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
+             x:Class="Destock.App.Views.ScannerPage"
+             BackgroundColor="#04110C"
+             Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <scanner:CameraView x:Name="Camera"
+                            CameraEnabled="False"
+                            VibrationOnDetected="False"
+                            OnDetectionFinished="OnDetectionFinished" />
+
+        <Grid RowDefinitions="Auto,*,Auto" Padding="18,18,18,28">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border WidthRequest="46" HeightRequest="46" StrokeThickness="0"
+                        StrokeShape="RoundRectangle 23" BackgroundColor="#E6FFFFFF">
+                    <ImageButton Source="close.png" BackgroundColor="Transparent"
+                                 Padding="11" Clicked="OnCloseClicked" />
+                </Border>
+                <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center"
+                                     HorizontalOptions="Center">
+                    <Label Text="Scanner un code-barres" FontFamily="InterBold" FontSize="17"
+                           TextColor="White" HorizontalTextAlignment="Center" />
+                    <Label Text="Placez le code dans le cadre" FontFamily="Inter" FontSize="11.5"
+                           TextColor="#B8FFFFFF" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+                <Border Grid.Column="2" WidthRequest="46" HeightRequest="46" StrokeThickness="0"
+                        StrokeShape="RoundRectangle 23" BackgroundColor="#66101814">
+                    <ImageButton x:Name="TorchButton" Source="flash.png" BackgroundColor="Transparent"
+                                 Padding="11" Clicked="OnTorchClicked" />
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="1" VerticalOptions="Center">
+                <Border WidthRequest="286" HeightRequest="196" StrokeThickness="3"
+                        Stroke="#B3FFFFFF" StrokeShape="RoundRectangle 24"
+                        BackgroundColor="Transparent" HorizontalOptions="Center">
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,0" Radius="24" Opacity="0.25" />
+                    </Border.Shadow>
+                </Border>
+                <BoxView WidthRequest="4" HeightRequest="28" Color="#FFFFFF"
+                         HorizontalOptions="Center" VerticalOptions="Start"
+                         TranslationY="72" CornerRadius="2" />
+            </Grid>
+
+            <VerticalStackLayout Grid.Row="2" Spacing="10">
+                <Border BackgroundColor="#B3101814" StrokeThickness="0"
+                        StrokeShape="RoundRectangle 16" Padding="16,12">
+                    <Label Text="La détection est automatique. Le premier code valide ferme le scanner."
+                           FontFamily="Inter" FontSize="12" TextColor="White"
+                           HorizontalTextAlignment="Center" />
+                </Border>
+                <Label Text="Utilisez la lampe si la luminosité est faible."
+                       FontFamily="Inter" FontSize="11" TextColor="#B8FFFFFF"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

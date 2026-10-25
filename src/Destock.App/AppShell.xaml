@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:Destock.App.Views"
+       x:Class="Destock.App.AppShell"
+       Title="Destock"
+       FlyoutBehavior="Flyout"
+       FlyoutHeaderBehavior="Fixed">
+
+    <Shell.FlyoutHeader>
+        <Grid HeightRequest="196">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#064E3B" Offset="0.0" />
+                    <GradientStop Color="#0B7A5C" Offset="0.6" />
+                    <GradientStop Color="#0EA5A0" Offset="1.0" />
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <Ellipse Fill="#12FFFFFF" WidthRequest="170" HeightRequest="170"
+                     HorizontalOptions="End" VerticalOptions="Start"
+                     TranslationX="60" TranslationY="-70" />
+
+            <Grid RowDefinitions="Auto,*,Auto" Padding="22,30,22,20">
+                <HorizontalStackLayout Spacing="10">
+                    <Image Source="logo_white.png" HeightRequest="30" WidthRequest="30" />
+                    <Label Text="Destock" FontFamily="InterExtraBold" FontSize="22"
+                           TextColor="White" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <Grid Grid.Row="1" ColumnDefinitions="Auto,*" ColumnSpacing="13" VerticalOptions="End">
+                    <Border WidthRequest="54" HeightRequest="54" StrokeThickness="0"
+                            StrokeShape="RoundRectangle 18" BackgroundColor="#26FFFFFF"
+                            VerticalOptions="Center">
+                        <Label x:Name="UserInitialsLabel" Text="AD"
+                               FontFamily="InterBold" FontSize="18" TextColor="White"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label x:Name="UserNameLabel" Text="Administrateur"
+                               FontFamily="InterSemiBold" FontSize="15" TextColor="White"
+                               LineBreakMode="TailTruncation" />
+                        <Label x:Name="UserRoleLabel" Text="Administrateur"
+                               FontFamily="Inter" FontSize="11.5" TextColor="#CCFFFFFF" />
+                    </VerticalStackLayout>
+                </Grid>
+
+                <HorizontalStackLayout Grid.Row="2" Spacing="6" Margin="0,12,0,0">
+                    <Label x:Name="CompanyLabel" Text="Destock" FontFamily="InterMedium"
+                           FontSize="11" TextColor="#B8FFFFFF" />
+                    <Label Text="·" FontSize="11" TextColor="#8FFFFFFF" />
+                    <Label Text="Gestion de stock" FontFamily="Inter" FontSize="11" TextColor="#B8FFFFFF" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Title="Accueil" Icon="home.png">
+        <ShellContent Title="Accueil" Route="dashboard" ContentTemplate="{DataTemplate views:DashboardPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Produits" Icon="products.png">
+        <ShellContent Title="Produits" Route="products" ContentTemplate="{DataTemplate views:ProductsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Mouvements" Icon="movements.png">
+        <ShellContent Title="Mouvements" Route="movements" ContentTemplate="{DataTemplate views:MovementsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Alertes" Icon="alerts.png">
+        <ShellContent Title="Alertes" Route="alerts" ContentTemplate="{DataTemplate views:AlertsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Dépôts" Icon="warehouses.png">
+        <ShellContent Title="Dépôts" Route="warehouses" ContentTemplate="{DataTemplate views:WarehousesPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Catégories" Icon="category.png">
+        <ShellContent Title="Catégories" Route="categories" ContentTemplate="{DataTemplate views:CategoriesPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Rapports" Icon="reports.png">
+        <ShellContent Title="Rapports" Route="reports" ContentTemplate="{DataTemplate views:ReportsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem x:Name="UsersFlyoutItem" Title="Utilisateurs" Icon="users.png">
+        <ShellContent Title="Utilisateurs" Route="users" ContentTemplate="{DataTemplate views:UsersPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Paramètres" Icon="settings.png">
+        <ShellContent Title="Paramètres" Route="settings" ContentTemplate="{DataTemplate views:SettingsPage}" />
+    </FlyoutItem>
+
+    <MenuItem Text="Déconnexion" IconImageSource="logout.png" Clicked="OnLogoutClicked" />
+
+    <Shell.FlyoutFooter>
+        <Grid Padding="22,12,22,18">
+            <Label x:Name="VersionLabel" Text="v1.0.0 · moteur Rust"
+                   FontFamily="Inter" FontSize="10.5"
+                   TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}" />
+        </Grid>
+    </Shell.FlyoutFooter>
+</Shell>

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:Destock.App.Converters"
+             xmlns:controls="clr-namespace:Destock.App.Controls"
+             x:Class="Destock.App.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:MoneyConverter x:Key="Money" />
+            <converters:MoneyShortConverter x:Key="MoneyShort" />
+            <converters:QuantityConverter x:Key="Quantity" />
+            <converters:DateTimeConverter x:Key="DateTime" />
+            <converters:DateConverter x:Key="DateOnly" />
+            <converters:InitialsConverter x:Key="Initials" />
+            <converters:MovementLabelConverter x:Key="MovementLabel" />
+            <converters:MovementSignConverter x:Key="MovementSign" />
+            <converters:MovementColorConverter x:Key="MovementColor" />
+            <converters:MovementIconConverter x:Key="MovementIcon" />
+            <converters:LowStockColorConverter x:Key="LowStockColor" />
+            <converters:InverseBoolConverter x:Key="InverseBool" />
+            <converters:IsNotNullConverter x:Key="IsNotNull" />
+            <converters:CountToBoolConverter x:Key="HasItems" />
+            <converters:StockStateConverter x:Key="StockState" />
+            <converters:StockStateColorConverter x:Key="StockStateColor" />
+            <converters:StockStateTextColorConverter x:Key="StockStateTextColor" />
+            <converters:CategoryColorConverter x:Key="CategoryColor" />
+            <converters:FirstLetterConverter x:Key="FirstLetter" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

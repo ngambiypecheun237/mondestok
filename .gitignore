@@ -1,0 +1,19 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.vscode/
+.idea/
+artifacts/
+
+# Android / build outputs
+*.apk
+*.aab
+*.keystore
+
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Destock.App.Controls"
+             x:Class="Destock.App.Views.DashboardPage"
+             x:Name="DashboardRoot"
+             Title="Accueil">
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+        <ScrollView>
+            <VerticalStackLayout Padding="18,12,18,32" Spacing="16">
+
+                <!-- En-tête -->
+                <Border StrokeThickness="0" StrokeShape="RoundRectangle 24" Padding="20">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#064E3B" Offset="0.0" />
+                            <GradientStop Color="#0B7A5C" Offset="0.58" />
+                            <GradientStop Color="#0EA5A0" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="14">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding Greeting}" FontFamily="Inter"
+                                       FontSize="12.5" TextColor="#CCFFFFFF" />
+                                <Label Text="{Binding UserName}" FontFamily="InterBold"
+                                       FontSize="22" TextColor="White" />
+                            </VerticalStackLayout>
+                            <Border Grid.Column="1" WidthRequest="44" HeightRequest="44"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 14"
+                                    BackgroundColor="#26FFFFFF" VerticalOptions="Center">
+                                <Label Text="{Binding UserInitials}" FontFamily="InterBold"
+                                       FontSize="15" TextColor="White"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                        </Grid>
+
+                        <VerticalStackLayout Grid.Row="1" Spacing="1">
+                            <Label Text="Valeur du stock" FontFamily="Inter"
+                                   FontSize="12" TextColor="#B8FFFFFF" />
+                            <Label Text="{Binding Summary.StockValueMinor, Converter={StaticResource Money}}"
+                                   FontFamily="InterExtraBold" FontSize="33" TextColor="White"
+                                   LineBreakMode="TailTruncation" />
+                            <Label Text="{Binding Summary.TotalQuantity, Converter={StaticResource Quantity}, StringFormat='{}{0} unités en stock'}"
+                                   FontFamily="Inter" FontSize="11.5" TextColor="#B8FFFFFF" />
+                        </VerticalStackLayout>
+
+                        <HorizontalStackLayout Grid.Row="2" Spacing="8">
+                            <Border BackgroundColor="#1FFFFFFF" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 999" Padding="10,5">
+                                <Label Text="{Binding Summary.ProductCount, StringFormat='{}{0} produits'}"
+                                       FontFamily="InterMedium" FontSize="10.5" TextColor="White" />
+                            </Border>
+                            <Border BackgroundColor="#1FFFFFFF" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 999" Padding="10,5">
+                                <HorizontalStackLayout Spacing="4">
+                                    <Label Text="{Binding Summary.LowStockCount}" FontFamily="InterBold"
+                                           FontSize="10.5" TextColor="#FFD9A8" />
+                                    <Label Text="alertes" FontFamily="InterMedium" FontSize="10.5"
+                                           TextColor="White" />
+                                </HorizontalStackLayout>
+                            </Border>
+                            <Border BackgroundColor="#1FFFFFFF" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 999" Padding="10,5">
+                                <Label Text="{Binding TodayLabel}" FontFamily="InterMedium"
+                                       FontSize="10.5" TextColor="White" />
+                            </Border>
+                        </HorizontalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- Filtre dépôt -->
+                <Border Style="{StaticResource InputBorder}" Padding="12,0">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                        <Image Source="warehouses.png" HeightRequest="18" WidthRequest="18"
+                               VerticalOptions="Center" />
+                        <Picker Grid.Column="1"
+                                Title="Tous les dépôts"
+                                ItemsSource="{Binding WarehouseOptions}"
+                                ItemDisplayBinding="{Binding Name}"
+                                SelectedItem="{Binding SelectedWarehouse}"
+                                FontSize="13.5" />
+                    </Grid>
+                </Border>
+
+                <!-- Actions rapides -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                    <Border Style="{StaticResource ListCard}" Padding="10,12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NewInCommand}" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                            <Border WidthRequest="36" HeightRequest="36" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12" BackgroundColor="{StaticResource SuccessBg}">
+                                <Image Source="arrow_down.png" HeightRequest="18" WidthRequest="18"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Label Text="Entrée" Style="{StaticResource CardTitle}" FontSize="12.5"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Réception" Style="{StaticResource CaptionText}"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource ListCard}" Padding="10,12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NewOutCommand}" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                            <Border WidthRequest="36" HeightRequest="36" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12" BackgroundColor="{StaticResource DangerBg}">
+                                <Image Source="arrow_up.png" HeightRequest="18" WidthRequest="18"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Label Text="Sortie" Style="{StaticResource CardTitle}" FontSize="12.5"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Vente / perte" Style="{StaticResource CaptionText}"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="2" Style="{StaticResource ListCard}" Padding="10,12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ScanCommand}" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                            <Border WidthRequest="36" HeightRequest="36" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12" BackgroundColor="{StaticResource WarningBg}">
+                                <Image Source="scan.png" HeightRequest="18" WidthRequest="18"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Label Text="Scanner" Style="{StaticResource CardTitle}" FontSize="12.5"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Code-barres" Style="{StaticResource CaptionText}"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Border IsVisible="{Binding HasError}" BackgroundColor="{AppThemeBinding Light={StaticResource DangerBg}, Dark=#3A1D20}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,10">
+                    <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                           FontFamily="InterMedium" FontSize="12.5" />
+                </Border>
+
+                <!-- Indicateurs -->
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+                    <Border Style="{StaticResource Card}" Padding="14">
+                        <VerticalStackLayout Spacing="6">
+                            <Border WidthRequest="34" HeightRequest="34" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 11" BackgroundColor="{StaticResource Secondary}">
+                                <Image Source="products.png" HeightRequest="17" WidthRequest="17"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Label Text="{Binding Summary.ProductCount}" Style="{StaticResource MetricValue}" />
+                            <Label Text="Produits actifs" Style="{StaticResource MetricLabel}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource Card}" Padding="14">
+                        <VerticalStackLayout Spacing="6">
+                            <Border WidthRequest="34" HeightRequest="34" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 11" BackgroundColor="{StaticResource WarningBg}">
+                                <Image Source="alerts.png" HeightRequest="17" WidthRequest="17"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Label Text="{Binding Summary.LowStockCount}" Style="{StaticResource MetricValue}" />
+                            <Label Text="Alertes de stock" Style="{StaticResource MetricLabel}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Style="{StaticResource Card}" Padding="14">
+                        <VerticalStackLayout Spacing="6">
+                            <Border WidthRequest="34" HeightRequest="34" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 11" BackgroundColor="{StaticResource InfoBg}">
+                                <Image Source="movements.png" HeightRequest="17" WidthRequest="17"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Label Text="{Binding Summary.MovementsToday}" Style="{StaticResource MetricValue}" />
+                            <Label Text="Mouvements du jour" Style="{StaticResource MetricLabel}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource Card}" Padding="14">
+                        <VerticalStackLayout Spacing="6">
+                            <Border WidthRequest="34" HeightRequest="34" StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 11" BackgroundColor="{StaticResource MutedSurfaceLight}">
+                                <Image Source="warehouses.png" HeightRequest="17" WidthRequest="17"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <Label Text="{Binding Summary.WarehouseCount}" Style="{StaticResource MetricValue}" />
+                            <Label Text="Dépôts" Style="{StaticResource MetricLabel}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Graphique des flux -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Flux de stock" Style="{StaticResource SectionTitle}" />
+                            <Label Grid.Column="1" Text="6 derniers mois" Style="{StaticResource CaptionText}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+
+                        <HorizontalStackLayout Spacing="16">
+                            <HorizontalStackLayout Spacing="6">
+                                <Border WidthRequest="9" HeightRequest="9" BackgroundColor="#10B981"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 3" VerticalOptions="Center" />
+                                <Label Text="{Binding MonthInLabel}" Style="{StaticResource MutedText}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="6">
+                                <Border WidthRequest="9" HeightRequest="9" BackgroundColor="#F59E0B"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 3" VerticalOptions="Center" />
+                                <Label Text="{Binding MonthOutLabel}" Style="{StaticResource MutedText}" />
+                            </HorizontalStackLayout>
+                        </HorizontalStackLayout>
+
+                        <controls:FlowChart ItemsSource="{Binding Summary.MonthlyFlows}"
+                                            HeightRequest="174" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Alertes -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="Stocks à surveiller" Style="{StaticResource SectionTitle}" />
+                    <Label Grid.Column="1" Text="Tout voir" Style="{StaticResource LinkText}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenAlertsCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+
+                <Border Style="{StaticResource Card}" Padding="6" IsVisible="{Binding HasAlerts}">
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Summary.Alerts}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="10,9" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding BindingContext.AlertTappedCommand, Source={x:Reference DashboardRoot}}"
+                                            CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+                                    <Border WidthRequest="9" HeightRequest="9" BackgroundColor="{StaticResource Danger}"
+                                            StrokeThickness="0" StrokeShape="RoundRectangle 5"
+                                            VerticalOptions="Center" />
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="{Binding ProductName}" Style="{StaticResource CardTitle}" />
+                                        <Label Text="{Binding WarehouseName}" Style="{StaticResource CaptionText}" />
+                                    </VerticalStackLayout>
+                                    <Border Grid.Column="2" BackgroundColor="{StaticResource DangerBg}"
+                                            StrokeThickness="0" StrokeShape="RoundRectangle 999"
+                                            Padding="9,4" VerticalOptions="Center">
+                                        <Label Text="{Binding Quantity, Converter={StaticResource Quantity}}"
+                                               FontFamily="InterBold" FontSize="11.5"
+                                               TextColor="{StaticResource Danger}" />
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource Card}" IsVisible="{Binding HasNoAlerts}" Padding="18">
+                    <HorizontalStackLayout Spacing="12">
+                        <Border WidthRequest="38" HeightRequest="38" BackgroundColor="{StaticResource SuccessBg}"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 12">
+                            <Image Source="check.png" HeightRequest="18" WidthRequest="18"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                            <Label Text="Tous les stocks sont bons" Style="{StaticResource CardTitle}" />
+                            <Label Text="Aucun produit sous son seuil d'alerte." Style="{StaticResource CaptionText}" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Top produits -->
+                <VerticalStackLayout Spacing="10" IsVisible="{Binding HasTopProducts}">
+                    <Label Text="Produits les plus vendus" Style="{StaticResource SectionTitle}" />
+                    <Border Style="{StaticResource Card}" Padding="8">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Summary.TopProducts}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="10,9" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding BindingContext.ProductTappedCommand, Source={x:Reference DashboardRoot}}"
+                                                CommandParameter="{Binding ProductId}" />
+                                        </Grid.GestureRecognizers>
+                                        <Border WidthRequest="30" HeightRequest="30" BackgroundColor="{StaticResource Secondary}"
+                                                StrokeThickness="0" StrokeShape="RoundRectangle 10">
+                                            <Label Text="↑" FontFamily="InterBold" FontSize="14"
+                                                   TextColor="{StaticResource Primary}"
+                                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                                        </Border>
+                                        <Label Grid.Column="1" Text="{Binding Name}" Style="{StaticResource CardTitle}"
+                                               VerticalOptions="Center" LineBreakMode="TailTruncation" />
+                                        <VerticalStackLayout Grid.Column="2" Spacing="1" HorizontalOptions="End">
+                                            <Label Text="{Binding Quantity, Converter={StaticResource Quantity}, StringFormat='{}{0} vendus'}"
+                                                   FontFamily="InterSemiBold" FontSize="11.5"
+                                                   TextColor="{StaticResource Primary}" HorizontalTextAlignment="End" />
+                                            <Label Text="{Binding ValueMinor, Converter={StaticResource MoneyShort}}"
+                                                   Style="{StaticResource CaptionText}" HorizontalTextAlignment="End" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Mouvements récents -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="Derniers mouvements" Style="{StaticResource SectionTitle}" />
+                    <Label Grid.Column="1" Text="Tout voir" Style="{StaticResource LinkText}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenMovementsCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+
+                <Border Style="{StaticResource Card}" Padding="6" IsVisible="{Binding HasRecent}">
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Summary.RecentMovements}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="10,8" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding BindingContext.MovementTappedCommand, Source={x:Reference DashboardRoot}}"
+                                            CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+                                    <Border WidthRequest="34" HeightRequest="34" StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 11"
+                                            BackgroundColor="{Binding Type, Converter={StaticResource MovementColor}}">
+                                        <Image Source="{Binding Type, Converter={StaticResource MovementIcon}}"
+                                               HeightRequest="17" WidthRequest="17"
+                                               HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding ProductName}" Style="{StaticResource CardTitle}"
+                                               LineBreakMode="TailTruncation" />
+                                        <Label Text="{Binding WarehouseName}" Style="{StaticResource CaptionText}" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2" Spacing="1" HorizontalOptions="End">
+                                        <Label Text="{Binding QuantityLabel}"
+                                               FontFamily="InterBold" FontSize="13"
+                                               TextColor="{Binding Type, Converter={StaticResource MovementColor}}"
+                                               HorizontalTextAlignment="End" />
+                                        <Label Text="{Binding CreatedAt, Converter={StaticResource DateTime}}"
+                                               Style="{StaticResource CaptionText}" HorizontalTextAlignment="End" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource Card}" IsVisible="{Binding HasNoRecent}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Aucun mouvement" Style="{StaticResource EmptyTitle}" />
+                        <Label Text="Enregistrez votre première entrée de stock." Style="{StaticResource EmptyText}" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

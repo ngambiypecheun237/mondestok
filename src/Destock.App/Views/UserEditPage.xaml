@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Destock.App.Controls"
+             x:Class="Destock.App.Views.UserEditPage"
+             Title="Utilisateur">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView>
+            <VerticalStackLayout Padding="18,12,18,24" Spacing="16">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="{Binding PageHeader}" Style="{StaticResource PageTitle}" />
+                    <Label Text="Gérez l'identité, le rôle et l'accès au compte."
+                           Style="{StaticResource PageSubtitle}" />
+                </VerticalStackLayout>
+
+                <Border IsVisible="{Binding HasError}" BackgroundColor="{StaticResource DangerBg}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,10">
+                    <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                           FontFamily="InterMedium" FontSize="12.5" />
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Identité" Style="{StaticResource SectionTitle}" />
+
+                        <controls:FormEntry FieldLabel="Nom d'utilisateur *" Text="{Binding Username}"
+                                            Placeholder="Ex. alice" MaxLength="40" />
+
+                        <controls:FormEntry FieldLabel="Nom affiché" Text="{Binding DisplayName}"
+                                            Placeholder="Prénom et nom" MaxLength="80" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Rôle &amp; accès" Style="{StaticResource SectionTitle}" />
+
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Rôle" Style="{StaticResource FieldLabel}" />
+                            <Border Style="{StaticResource InputBorder}" Padding="10,0">
+                                <Picker ItemsSource="{Binding RoleOptions}"
+                                        ItemDisplayBinding="{Binding Label}"
+                                        SelectedItem="{Binding SelectedRole}"
+                                        Title="Choisir un rôle" FontSize="14" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                <Label Text="Compte actif" Style="{StaticResource CardTitle}" />
+                                <Label Text="Un compte désactivé ne peut plus se connecter."
+                                       Style="{StaticResource CaptionText}" />
+                            </VerticalStackLayout>
+                            <Switch Grid.Column="1" IsToggled="{Binding IsActive}"
+                                    IsEnabled="{Binding IsSelf, Converter={StaticResource InverseBool}}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Mot de passe" Style="{StaticResource SectionTitle}" />
+                        <controls:FormEntry FieldLabel="{Binding PasswordLabel}" Text="{Binding Password}"
+                                            Placeholder="••••••" IsPassword="True" MaxLength="80" />
+                        <Label Text="{Binding PasswordHint}" Style="{StaticResource CaptionText}" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Border Grid.Row="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLight}, Dark={StaticResource CardBackgroundDark}}"
+                StrokeThickness="0" StrokeShape="Rectangle" Padding="18,12,18,20">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <Button Text="Supprimer" Style="{StaticResource DangerButton}"
+                        IsVisible="{Binding CanDelete}"
+                        Command="{Binding DeleteCommand}" />
+                <Button Grid.Column="1" Text="{Binding SaveLabel}" Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBool}}" />
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

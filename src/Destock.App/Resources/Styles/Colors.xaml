@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Identité Destock -->
+    <Color x:Key="Primary">#0B7A5C</Color>
+    <Color x:Key="PrimaryDark">#5EEAD4</Color>
+    <Color x:Key="PrimaryDarkText">#052E22</Color>
+    <Color x:Key="Secondary">#DDF3EA</Color>
+    <Color x:Key="SecondaryDarkText">#A7F3D0</Color>
+    <Color x:Key="Tertiary">#0EA5A0</Color>
+
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="Magenta">#D600AA</Color>
+    <Color x:Key="MidnightBlue">#190649</Color>
+    <Color x:Key="OffBlack">#1F2937</Color>
+
+    <Color x:Key="Gray100">#F1F5F3</Color>
+    <Color x:Key="Gray200">#E2E8E5</Color>
+    <Color x:Key="Gray300">#CBD5D0</Color>
+    <Color x:Key="Gray400">#94A3A0</Color>
+    <Color x:Key="Gray500">#64748B</Color>
+    <Color x:Key="Gray600">#475569</Color>
+    <Color x:Key="Gray900">#0F172A</Color>
+    <Color x:Key="Gray950">#020617</Color>
+
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
+    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
+    <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
+    <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>
+    <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}"/>
+    <SolidColorBrush x:Key="Gray400Brush" Color="{StaticResource Gray400}"/>
+    <SolidColorBrush x:Key="Gray500Brush" Color="{StaticResource Gray500}"/>
+    <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
+    <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
+    <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <!-- Couleurs sémantiques -->
+    <Color x:Key="Success">#16A34A</Color>
+    <Color x:Key="SuccessBg">#E6F7EF</Color>
+    <Color x:Key="Danger">#E5484D</Color>
+    <Color x:Key="DangerBg">#FDE7E7</Color>
+    <Color x:Key="Warning">#D97706</Color>
+    <Color x:Key="WarningBg">#FEF3E2</Color>
+    <Color x:Key="Info">#2563EB</Color>
+    <Color x:Key="InfoBg">#E8F0FE</Color>
+
+    <!-- Fonds et textes (clair / sombre) -->
+    <Color x:Key="PageBackgroundLight">#F4F7F5</Color>
+    <Color x:Key="PageBackgroundDark">#080F0C</Color>
+    <Color x:Key="CardBackgroundLight">#FFFFFF</Color>
+    <Color x:Key="CardBackgroundDark">#131F1A</Color>
+    <Color x:Key="InputBackgroundLight">#F7FAF8</Color>
+    <Color x:Key="InputBackgroundDark">#0E1814</Color>
+    <Color x:Key="TextPrimaryLight">#10201A</Color>
+    <Color x:Key="TextPrimaryDark">#F0F7F3</Color>
+    <Color x:Key="TextSecondaryLight">#5D6F68</Color>
+    <Color x:Key="TextSecondaryDark">#9FB3AA</Color>
+    <Color x:Key="BorderLight">#E1E9E4</Color>
+    <Color x:Key="BorderDark">#24352D</Color>
+    <Color x:Key="MutedSurfaceLight">#EDF3F0</Color>
+    <Color x:Key="MutedSurfaceDark">#1A2923</Color>
+    <Color x:Key="GradientStart">#0B7A5C</Color>
+    <Color x:Key="GradientEnd">#0EA5A0</Color>
+</ResourceDictionary>

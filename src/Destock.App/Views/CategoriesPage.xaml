@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Destock.App.Views.CategoriesPage"
+             x:Name="CategoriesRoot"
+             Title="Catégories">
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+        <ScrollView>
+            <VerticalStackLayout Padding="18,12,18,32" Spacing="16">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Catégories" Style="{StaticResource PageTitle}" />
+                        <Label Text="{Binding CountLabel}" Style="{StaticResource PageSubtitle}" />
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="+ Nouvelle" Style="{StaticResource SmallButton}"
+                            Command="{Binding StartNewCommand}" VerticalOptions="Center" />
+                </Grid>
+
+                <Border IsVisible="{Binding HasError}" BackgroundColor="{StaticResource DangerBg}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,10">
+                    <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                           FontFamily="InterMedium" FontSize="12.5" />
+                </Border>
+
+                <!-- Éditeur -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="{Binding EditorTitle}" Style="{StaticResource SectionTitle}" />
+
+                        <Border Style="{StaticResource InputBorder}" Padding="12,0">
+                            <Entry Text="{Binding Name}" Placeholder="Nom de la catégorie"
+                                   FontSize="14" MaxLength="60" />
+                        </Border>
+
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Couleur" Style="{StaticResource FieldLabel}" />
+                            <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Start"
+                                        BindableLayout.ItemsSource="{Binding Palette}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border WidthRequest="38" HeightRequest="38" StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 12" Margin="0,0,8,8"
+                                                BackgroundColor="{Binding Hex, Converter={StaticResource CategoryColor}}">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding BindingContext.SelectColorCommand, Source={x:Reference CategoriesRoot}}"
+                                                    CommandParameter="{Binding .}" />
+                                            </Border.GestureRecognizers>
+                                            <Label Text="✓" FontFamily="InterBold" FontSize="16"
+                                                   TextColor="White" IsVisible="{Binding IsSelected}"
+                                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
+                        </VerticalStackLayout>
+
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                            <Button Text="Annuler" Style="{StaticResource GhostButton}"
+                                    IsVisible="{Binding IsEditing}"
+                                    Command="{Binding CancelEditCommand}" />
+                            <Button Grid.Column="1" Text="{Binding SaveLabel}" Style="{StaticResource SmallButton}"
+                                    Command="{Binding SaveCommand}"
+                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBool}}"
+                                    HorizontalOptions="End" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="Vos catégories" Style="{StaticResource SectionTitle}" />
+
+                <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding Categories}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource ListCard}">
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding BindingContext.EditCategoryCommand, Source={x:Reference CategoriesRoot}}"
+                                            CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+
+                                    <Border WidthRequest="14" HeightRequest="14" StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 7"
+                                            BackgroundColor="{Binding Color, Converter={StaticResource CategoryColor}}"
+                                            VerticalOptions="Center" />
+
+                                    <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}" Style="{StaticResource CardTitle}" />
+                                        <Label Text="{Binding ProductCountLabel}" Style="{StaticResource CaptionText}" />
+                                    </VerticalStackLayout>
+
+                                    <ImageButton Grid.Column="2" Source="edit.png"
+                                                 Style="{StaticResource IconButton}"
+                                                 Command="{Binding BindingContext.EditCategoryCommand, Source={x:Reference CategoriesRoot}}"
+                                                 CommandParameter="{Binding .}" />
+                                    <ImageButton Grid.Column="3" Source="trash.png"
+                                                 Style="{StaticResource IconButton}"
+                                                 Command="{Binding BindingContext.DeleteCategoryCommand, Source={x:Reference CategoriesRoot}}"
+                                                 CommandParameter="{Binding .}" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <Border Style="{StaticResource Card}" IsVisible="{Binding ShowEmpty}" Padding="24">
+                    <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                        <Label Text="Aucune catégorie" Style="{StaticResource EmptyTitle}" />
+                        <Label Text="Créez une catégorie pour organiser votre catalogue."
+                               Style="{StaticResource EmptyText}" />
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>
